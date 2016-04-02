@@ -86,7 +86,6 @@ class LogStash::Filters::CEF < LogStash::Filters::Base
 
         begin
             parsed = cef_decode(source)
-            print parsed
         rescue => e
             @tag_on_failure.each { |tag| event.tag(tag) }
             @logger.warn('Error parsing CEF', source: @source, raw: source, exception: e)
