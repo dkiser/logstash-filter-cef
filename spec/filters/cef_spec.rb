@@ -29,6 +29,31 @@ describe LogStash::Filters::CEF do
         end
     end
 
+    describe 'provide a target' do
+        config <<-CONFIG
+      filter {
+        cef {
+          # Parse message as CEF string
+          source => "message"
+          target => "baz"
+        }
+      }
+    CONFIG
+
+        sample 'CEF: 0|Figgity Foo Bar Inc.|ThingyThang|1.0.0|Firewall|Something Bad Happened|Informative|foo=bar baz=ah Hellz Nah' do
+            insist { subject['baz']['cef_version'] } == '0'
+            insist { subject['baz']['cef_vendor'] } == 'Figgity Foo Bar Inc.'
+            insist { subject['baz']['cef_product'] } == 'ThingyThang'
+            insist { subject['baz']['cef_device_version'] } == '1.0.0'
+            insist { subject['baz']['cef_sigid'] } == 'Firewall'
+            insist { subject['baz']['cef_name'] } == 'Something Bad Happened'
+            insist { subject['baz']['cef_syslog'] } == "CEF:"
+            insist { subject['baz']['cef_severity'] } == 'Informative'
+            insist { subject['baz']['cef_ext']['foo'] } == 'bar'
+            insist { subject['baz']['cef_ext']['baz'] } == 'ah Hellz Nah'
+        end
+    end
+
     context 'using message field source' do
         subject(:filter) { LogStash::Filters::CEF.new(config) }
 
