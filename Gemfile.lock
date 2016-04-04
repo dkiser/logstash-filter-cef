@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    logstash-filter-cef (2.0.3)
+    logstash-filter-cef (0.1.0)
       logstash-core (>= 2.0.0, < 3.0.0)
 
 GEM
